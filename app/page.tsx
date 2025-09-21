@@ -1,3 +1,4 @@
+import { hash, randomBytes, randomFill } from "crypto";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -16,8 +17,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
   const sp = await searchParams;
   const idParamRaw = sp?.id;
   const idParam = Array.isArray(idParamRaw) ? idParamRaw[0] : idParamRaw;
+  
 
   const cookieStore = await cookies();
+
+  const sth:string = hash("sha1", (cookieStore.get("session_token")?.value ?? "")).toString();
+
   const cookieSafeVal = cookieStore.get("safe")?.value;
   const safe = cookieSafeVal === "false" ? false : true; // default true
 
@@ -35,7 +40,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
   const quote: Quote = await res.json();
 
   const redirectTarget = idParam ? `/?id=${idParam}` : `/`;
-  const toggleHref = `/api/safe?value=${String(!safe)}&redirect=${encodeURIComponent(redirectTarget)}`;
+  const toggleHref = `/api/safe?value=${String(!safe)}&redirect=${encodeURIComponent(redirectTarget)}&token=${sth}`;
 
   return (
     <main className="min-h-screen flex flex-col p-4">
@@ -105,8 +110,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Sea
           </pre>
 
           <p className="mt-6 text-sm text-neutral-500">
-            {quote.category}{quote.sfw ? "" : "/NSFW"} | ID: {quote.id} | <Link className="text-black" href={"/"}>Another</Link> | 
-            <Link href={"#"}>Share</Link>
+            {quote.category}{quote.sfw ? "" : "/NSFW"} | ID: {quote.id} | <Link className="text-black" href={"/"}>Another</Link> | <Link href={"#"}>Share</Link>
           </p>
 
           {/* <div className="mt-4 flex items-center gap-3 text-sm">

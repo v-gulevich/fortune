@@ -1,10 +1,24 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { hash } from "crypto";
+import { forbidden } from "next/navigation";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const valueParam = url.searchParams.get("value");
   const redirectParam = url.searchParams.get("redirect") || "/";
 
+  const sth_trusted:string = hash("sha1", (req.cookies.get("session_token")?.value ?? "")).toString();
+  const sth_req:string = url.searchParams.get("token") || "@";
+
+  if(!(sth_req === sth_trusted)){
+    console.log(sth_req);
+    console.log(sth_trusted);
+    
+    
+    const res = NextResponse.redirect(new URL(redirectParam, url));
+    return res;
+  }
+  
   const current = req.cookies.get("safe")?.value;
   let value: "true" | "false";
   if (valueParam === "true" || valueParam === "false") {
