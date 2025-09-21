@@ -143,11 +143,11 @@ export default async function Page({
                 [ Another ]
               </Link>{" "}
               | Share on{" "}
-              <Link href={`/share/&kind=X&id=${quote.id}`} className="underline font-semibold text-neutral-400 hover:text-blue-700">
+              <Link target="_blank" href={`/share?kind=X&id=${quote.id}`} className="underline font-semibold text-neutral-400 hover:text-blue-700">
                 X
               </Link>{" "}
               or{" "}
-              <Link href={`/share/&kind=Bluesky&id=${quote.id}`} className="underline font-semibold text-neutral-400 hover:text-blue-700">
+              <Link title="Unfortunately, Bluesky may lose some of the formatting." target="_blank" href={`/share?kind=Bluesky&id=${quote.id}`} className="underline font-semibold text-neutral-400 hover:text-blue-700">
                 Bluesky
               </Link>
             </span>

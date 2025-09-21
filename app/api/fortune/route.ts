@@ -10,7 +10,7 @@ export interface Quote {
   category: string;
 }
 
-interface QuoteR extends Quote {
+export interface QuoteR extends Quote {
   id: number;
 }
 
