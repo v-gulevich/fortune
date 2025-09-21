@@ -25,8 +25,6 @@ export async function GET(req: NextRequest) {
       ? cookieSafe !== "false"
       : true;
   const idParam = url.searchParams.get("id");
-  const ua = req.headers.get("user-agent") || "";
-  const isCLI = /curl|wget|httpie/i.test(ua);
 
   let filteredQuotes = safeMode ? quotesData.filter((q) => q.sfw) : quotesData;
 
@@ -37,20 +35,14 @@ export async function GET(req: NextRequest) {
     const id = Number(idParam);
     console.log(`${idParam} : ${id}`);
     if (!isNaN(id) && id < 0 && easterEggs[id]) {
-      if (isCLI) {
-        return new NextResponse(easterEggs[id].text + "\n", {
-          headers: { "Content-Type": "text/plain" },
-        });
-      } else {
-        return NextResponse.json({ ...easterEggs[id], id });
-      }
+      return NextResponse.json({ ...easterEggs[id], id });
     }
   }
 
   if (idParam !== null) {
     const id = Number(idParam);
-    if (!isNaN(id) && id >= 0 && id < filteredQuotes.length) {
-      quote = { ...filteredQuotes[id], id };
+    if (!isNaN(id) && id >= 0) {
+      quote = { ...quotesData[id], id };
       selectedId = id;
     }
   }
@@ -60,11 +52,5 @@ export async function GET(req: NextRequest) {
     quote = { ...filteredQuotes[selectedId], id: selectedId };
   }
 
-  if (isCLI) {
-    return new NextResponse(quote.text + "\n", {
-      headers: { "Content-Type": "text/plain" },
-    });
-  } else {
-    return NextResponse.json(quote);
-  }
+  return NextResponse.json(quote);
 }
