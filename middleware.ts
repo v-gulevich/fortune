@@ -2,6 +2,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
+    if (request.nextUrl.basePath == "") {
+      console.log("HIT!");
+      
+    }
+
+
+  
+
+
+
   const sessionToken = request.cookies.get('session_token')?.value;
 
   if (!sessionToken) {
@@ -17,10 +27,10 @@ export function middleware(request: NextRequest) {
       path: '/',
     });
 
-    console.log('New session token set:', newSessionToken);
     return response;
   }
 
+  
   return NextResponse.next();
 }
 

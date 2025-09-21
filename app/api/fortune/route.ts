@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       ? safeParam !== "false"
       : cookieSafe != null
       ? cookieSafe !== "false"
-      : true; // default true when neither provided
+      : true;
   const idParam = url.searchParams.get("id");
   const ua = req.headers.get("user-agent") || "";
   const isCLI = /curl|wget|httpie/i.test(ua);
@@ -33,7 +33,6 @@ export async function GET(req: NextRequest) {
   let quote: QuoteR | undefined;
   let selectedId: number | undefined;
 
-  // Handle easter egg by negative ID
   if (idParam !== null) {
     const id = Number(idParam);
     console.log(`${idParam} : ${id}`);

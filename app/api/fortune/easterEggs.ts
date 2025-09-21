@@ -16,4 +16,9 @@ export const easterEggs: Record<number, Quote> = {
     sfw: true,
     category: "easter-egg",
   },
+  [-404]: {
+    text: "Not found.",
+    sfw: true,
+    category: "easter-egg",
+  }
 };
