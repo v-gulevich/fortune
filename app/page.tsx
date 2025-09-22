@@ -64,7 +64,7 @@ export default async function Page({
     ? `safe=${encodeURIComponent(cookieSafeVal)}`
     : undefined;
 
-  const quote: IndexedQuote = getFortune({id: Number(idParam), safe: Boolean(cookieHeader)});
+  const quote: IndexedQuote = getFortune({id: Number(idParam), safe: Boolean(safe)});
 
   const redirectTarget = idParam ? `/?id=${idParam}` : `/`;
   const toggleHref = `/api/safe?value=${String(
