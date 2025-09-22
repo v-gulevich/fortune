@@ -40,6 +40,12 @@ export default function Footer() {
         className="font-medium hover:text-black"
       >
         vladislav@gulevich.by
+      </Link> | <Link
+        href="/donate" 
+        rel="noopener noreferrer"
+        className="hover:text-blue-700 text-black hover:underline font-mono font-semibold"
+      >
+        [ Donate ]
       </Link> 
     </p>
     </footer>
