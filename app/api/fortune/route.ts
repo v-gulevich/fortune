@@ -33,7 +33,6 @@ export async function GET(req: NextRequest) {
 
   if (idParam !== null) {
     const id = Number(idParam);
-    console.log(`${idParam} : ${id}`);
     if (!isNaN(id) && id < 0 && easterEggs[id]) {
       return NextResponse.json({ ...easterEggs[id], id });
     }
