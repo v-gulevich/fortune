@@ -2,3 +2,14 @@
 
 /* If you "fix" this, everything breaks. DO NOT REMOVE */
 @plugin "@tailwindcss/typography";
+
+.prose pre {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.prose code::before,
+.prose code::after {
+  content: none;
+}

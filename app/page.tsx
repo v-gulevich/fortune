@@ -55,7 +55,7 @@ export default async function Page({
           <p className="text-neutral-600">
             Try{" "}
             <code className="font-mono text-xs font-semibold  text-neutral-700 p-0.5 bg-gray-200 rounded-sm border-1 border-gray-300">
-              curl {base}
+              curl https://fortune.gulevich.by/
             </code>
             !{" "}
             <Link href={"/docs"} className="underline">

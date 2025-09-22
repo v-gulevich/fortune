@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import "highlight.js/styles/atom-one-light.min.css"
 export const metadata: Metadata = {
   title: "Fortune",
   description: "Your daily dose of random quotes",

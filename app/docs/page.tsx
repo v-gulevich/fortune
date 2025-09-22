@@ -5,6 +5,18 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import rehypeHighlight from "rehype-highlight";
+
+import hljs from "highlight.js/lib/core";
+import bash from "highlight.js/lib/languages/bash";
+import http from "highlight.js/lib/languages/http";
+import json from "highlight.js/lib/languages/json";
+import typescript from "highlight.js/lib/languages/typescript";
+hljs.registerLanguage("shell", bash);
+hljs.registerLanguage("http", http);
+hljs.registerLanguage("json", json);
+hljs.registerLanguage("typescript", typescript);
+
 
 import docFile from "@/docs/api.md";
 
@@ -14,6 +26,7 @@ export default async function Page() {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype)
+    .use(rehypeHighlight)
     .use(rehypeStringify)
     .process(content);
 
