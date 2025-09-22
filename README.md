@@ -69,17 +69,6 @@ UI pages:
 - highlight.js for code samples
 - Vercel Analytics
 
-
-## Project structure
-
-```txt
-app/               # Next.js app routes (UI + API routes under app/api)
-docs/              # Markdown source for API docs (rendered at /docs)
-lib/               # Quote types, data loader, easter eggs
-public/            # Static assets (e.g., QR image)
-scripts/           # Utilities (dataset generation helpers)
-```
-
 ## Contributing
 
 Issues and PRs are welcome. If you plan a larger change, open an issue first to discuss direction.
