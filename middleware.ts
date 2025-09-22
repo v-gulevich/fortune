@@ -34,7 +34,6 @@ export async function middleware(request: NextRequest) {
       });
     } catch (error) {
       console.error("[middleware] CLI fortune fetch failed:", error);
-      const message = error instanceof Error ? error.message : "Unknown error";
       return new NextResponse(`Internal error\n`, {
         status: 502,
         headers: { "Content-Type": "text/plain; charset=utf-8" },

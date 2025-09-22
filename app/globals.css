@@ -1,1 +1,4 @@
 @import "tailwindcss";
+
+/* If you "fix" this, everything breaks. DO NOT REMOVE */
+@plugin "@tailwindcss/typography";

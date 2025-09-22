@@ -1,4 +1,4 @@
-import { hash, randomBytes, randomFill } from "crypto";
+import { hash } from "crypto";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -60,11 +60,9 @@ export default async function Page({
           <p className="text-neutral-600">Your daily dose of random quotes.</p>
           <p className="text-neutral-600">
             Try{" "}
-            <span className="font-mono text-xs font-semibold  text-neutral-700">
-              <code className="p-0.5 bg-gray-200 rounded-sm border-1 border-gray-300">
-                curl fortune.gulevich.by
-              </code>
-            </span>
+            <code className="font-mono text-xs font-semibold  text-neutral-700 p-0.5 bg-gray-200 rounded-sm border-1 border-gray-300">
+              curl {base}
+            </code>
             !{" "}
             <Link href={"/docs"} className="underline">
               See docs
@@ -139,19 +137,31 @@ export default async function Page({
 
           <div className="mt-6 text-sm text-neutral-500 antialiased flex flex-col gap-1 md:flex-row md:justify-between">
             <span>
-              <Link className="text-black hover:underline hover:text-blue-700 font-semibold" href={"/"}>
+              <Link
+                className="text-black hover:underline hover:text-blue-700 font-semibold"
+                href={"/"}
+              >
                 [ Another ]
               </Link>{" "}
               | Share on{" "}
-              <Link target="_blank" href={`/share?kind=X&id=${quote.id}`} className="underline font-semibold text-neutral-400 hover:text-blue-700">
+              <Link
+                target="_blank"
+                href={`/share?kind=X&id=${quote.id}`}
+                className="underline font-semibold text-neutral-400 hover:text-blue-700"
+              >
                 X
               </Link>{" "}
               or{" "}
-              <Link title="Unfortunately, Bluesky may lose some of the formatting." target="_blank" href={`/share?kind=Bluesky&id=${quote.id}`} className="underline font-semibold text-neutral-400 hover:text-blue-700">
+              <Link
+                title="Unfortunately, Bluesky may lose some of the formatting."
+                target="_blank"
+                href={`/share?kind=Bluesky&id=${quote.id}`}
+                className="underline font-semibold text-neutral-400 hover:text-blue-700"
+              >
                 Bluesky
               </Link>
             </span>
-            <hr className="text-neutral-400"/>
+            <hr className="text-neutral-400" />
             <span>
               ID: {quote.id} | {quote.category}
               {quote.sfw ? "" : "/NSFW"}
