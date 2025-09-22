@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  const ua = request.headers.get("user-agent") || "";
+  const isCLI = /(?:^|[\s(])(curl|wget|httpie)(?:\/|\s|\)|$)/i.test(ua);
+  if (isCLI && pathname === "/") {
+    const url = new URL("/api/curl-fortune", request.url);
+    return fetch(url);
+  }
   const sessionToken = request.cookies.get("session_token")?.value;
 
   if (!sessionToken) {

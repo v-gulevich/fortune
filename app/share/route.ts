@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const kindParam = url.searchParams.get("kind") || "X";
   const idParam = url.searchParams.get("id") || "21023";
-  const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
   if (
     kinds[kindParam] === "" ||
@@ -23,7 +22,7 @@ export async function GET(req: NextRequest) {
 
   const fortune: IndexedQuote = getFortune({ id: Number(idParam) });
 
-  const shareText = `${fortune.text}\n\n ${base}/?id=${fortune.id} #fortune #${fortune.category}`;
+  const shareText = `${fortune.text}\n\nhttps://fortune.gulevich.by/?id=${fortune.id}\n#fortune #${fortune.category}`;
 
   const res = NextResponse.redirect(
     new URL(kinds[kindParam] + encodeURIComponent(shareText))
