@@ -27,7 +27,7 @@ export default function Footer() {
     <p className="text-sm text-neutral-600">
       © {new Date().getFullYear()}{" "}
       <Link
-        href="https://github.com/" 
+        href="https://github.com/v-gulevich" 
         target="_blank"
         rel="noopener noreferrer"
         className="font-medium hover:text-black"
