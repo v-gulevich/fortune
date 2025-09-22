@@ -60,9 +60,9 @@ export default async function Page({
     apiUrl.searchParams.set("id", idParam);
   }
 
-  const cookieHeader = cookieSafeVal
-    ? `safe=${encodeURIComponent(cookieSafeVal)}`
-    : undefined;
+  // const cookieHeader = cookieSafeVal
+  //   ? `safe=${encodeURIComponent(cookieSafeVal)}`
+  //   : undefined;
 
   const quote: IndexedQuote = getFortune({id: Number(idParam), safe: Boolean(safe)});
 
