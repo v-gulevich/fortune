@@ -19,6 +19,7 @@ hljs.registerLanguage("typescript", typescript);
 
 
 import docFile from "@/docs/api.md";
+import Footer from "../components/footer";
 
 export default async function Page() {
   const { content } = matter(docFile);
@@ -48,18 +49,7 @@ export default async function Page() {
         ></article>
       </div>
 
-      <footer className="mt-auto pt-6 text-xs text-neutral-500 text-center">
-        Quotes are sourced from the "fortune-mod" databases.{" "}
-        <Link
-          href="https://github.com/shlomif/fortune-mod"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-blue-700"
-        >
-          Learn more
-        </Link>
-        . Safe mode preference is stored in a cookie.
-      </footer>
+      <Footer/>
     </main>
   );
 }

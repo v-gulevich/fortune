@@ -2,6 +2,7 @@ import { hash } from "crypto";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { IndexedQuote } from "./api/v1/fortune/Quote";
+import Footer from "./components/footer";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
@@ -58,7 +59,7 @@ export default async function Page({
               curl https://fortune.gulevich.by/
             </code>
             !{" "}
-            <Link href={"/docs"} className="underline">
+            <Link href={"/docs"} className="underline hover:text-black">
               See docs
             </Link>
             .
@@ -164,18 +165,7 @@ export default async function Page({
         </div>
       </div>
 
-      <footer className="mt-auto pt-6 text-xs text-neutral-500 text-center">
-        Quotes are sourced from the "fortune-mod" databases.{" "}
-        <Link
-          href="https://github.com/shlomif/fortune-mod"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-blue-700"
-        >
-          Learn more
-        </Link>
-        . Safe mode preference is stored in a cookie.
-      </footer>
+      <Footer/>
     </main>
   );
 }
