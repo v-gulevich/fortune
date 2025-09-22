@@ -6,14 +6,17 @@ export async function GET(req: NextRequest) {
   const valueParam = url.searchParams.get("value");
   const redirectParam = url.searchParams.get("redirect") || "/";
 
-  const sth_trusted:string = hash("sha1", (req.cookies.get("session_token")?.value ?? "")).toString();
-  const sth_req:string = url.searchParams.get("token") || "@";
+  const sth_trusted: string = hash(
+    "sha1",
+    req.cookies.get("session_token")?.value ?? ""
+  ).toString();
+  const sth_req: string = url.searchParams.get("token") || "@";
 
-  if(!(sth_req === sth_trusted)){    
+  if (!(sth_req === sth_trusted)) {
     const res = NextResponse.redirect(new URL(redirectParam, url));
     return res;
   }
-  
+
   const current = req.cookies.get("safe")?.value;
   let value: "true" | "false";
   if (valueParam === "true" || valueParam === "false") {
@@ -25,7 +28,7 @@ export async function GET(req: NextRequest) {
   }
 
   const res = NextResponse.redirect(new URL(redirectParam, url));
-  
+
   res.cookies.set("safe", value, {
     path: "/",
     httpOnly: true,

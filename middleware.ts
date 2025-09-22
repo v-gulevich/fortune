@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { Quote } from "./app/api/v1/fortune/route";
+import { IndexedQuote } from "./app/api/v1/fortune/Quote";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,7 +14,6 @@ export async function middleware(request: NextRequest) {
 
       const resp = await fetch(apiUrl);
 
-
       if (!resp.ok) {
         const errText = await resp.text().catch(() => "");
         return new NextResponse(
@@ -27,7 +26,7 @@ export async function middleware(request: NextRequest) {
       }
 
       const data = await resp.json().catch(() => null);
-      const quote = String((data as Quote).text) + "\n";
+      const quote = String((data as IndexedQuote).text) + "\n";
 
       return new NextResponse(quote, {
         headers: { "Content-Type": "text/plain; charset=utf-8" },

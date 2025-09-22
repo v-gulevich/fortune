@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Fortune",
   description: "Your daily dose of random quotes",
-  authors: [{name: "Vladislav Gulevich", url: "https://gulevich.by"}]
+  authors: [{ name: "Vladislav Gulevich", url: "https://gulevich.by" }],
 };
 
 export default function RootLayout({
@@ -14,9 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased bg-white text-black`}>
-        {children}
-      </body>
+      <body className={`antialiased bg-white text-black`}>{children}</body>
     </html>
   );
 }

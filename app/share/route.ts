@@ -1,6 +1,5 @@
-import { hash } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { Quote, QuoteR } from "../api/v1/fortune/route";
+import { IndexedQuote } from "../api/v1/fortune/Quote";
 
 const kinds: Record<string, string> = {
   X: "https://twitter.com/intent/tweet?text=",
@@ -25,7 +24,7 @@ export async function GET(req: NextRequest) {
   const resp = await fetch(apiUrl);
 
   const data = await resp.json().catch(() => null);
-  const quote = data as QuoteR;
+  const quote = data as IndexedQuote;
 
   const shareText = `${quote.text}\n\n ${base}/?id=${quote.id}`;
 

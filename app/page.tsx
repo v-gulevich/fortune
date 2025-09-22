@@ -1,13 +1,7 @@
 import { hash } from "crypto";
 import { cookies } from "next/headers";
 import Link from "next/link";
-
-interface Quote {
-  text: string;
-  sfw: boolean;
-  category: string;
-  id: number;
-}
+import { IndexedQuote } from "./api/v1/fortune/Quote";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
@@ -45,7 +39,7 @@ export default async function Page({
     cache: "no-store",
     headers: cookieHeader ? { cookie: cookieHeader } : undefined,
   });
-  const quote: Quote = await res.json();
+  const quote: IndexedQuote = await res.json();
 
   const redirectTarget = idParam ? `/?id=${idParam}` : `/`;
   const toggleHref = `/api/safe?value=${String(

@@ -1,24 +1,22 @@
 import { NextResponse, type NextRequest } from "next/server";
 import quotesDataRaw from "./quotes.json";
 import { easterEggs } from "./easterEggs";
+import { Quote, IndexedQuote } from "./Quote";
+import { randomInt } from "crypto";
 
-// NSFW quotes are guaranteed to be at the end of the file, so none are accidentally lost
+// big chunk of data from json
 const quotesData: Quote[] = quotesDataRaw as Quote[];
-const safeQuotes: Quote[] = quotesData.filter((q) => q.sfw);
 
-export interface Quote {
-  text: string;
-  sfw: boolean;
-  category: string;
-}
+// indexed
+const indexedQuotes: IndexedQuote[] = quotesData.map((q, i) => ({
+  ...q,
+  id: i,
+}));
+const indexedSafeQuotes: IndexedQuote[] = indexedQuotes.filter((q) => q.sfw);
 
-export interface QuoteR extends Quote {
-  id: number;
-}
-
-function randomFromSet(set: Quote[]): QuoteR {
-  const id: number = Math.floor(Math.random() * set.length);
-  return { ...set[id], id: id };
+function randomFromSet(set: IndexedQuote[]): IndexedQuote {
+  const idx: number = randomInt(set.length);
+  return set[idx];
 }
 
 export async function GET(req: NextRequest) {
@@ -33,26 +31,24 @@ export async function GET(req: NextRequest) {
       : true;
   const idParam = url.searchParams.get("id");
 
-  let quote: QuoteR | undefined;
-  let selectedId: number | undefined;
+  let quote: IndexedQuote | undefined;
 
   if (idParam !== null) {
     const id = Number(idParam);
-    if (!isNaN(id)) {
+    if (Number.isInteger(id)) {
       if (id < 0 && easterEggs[id]) {
         return NextResponse.json({ ...easterEggs[id], id });
       } else {
-        quote = { ...quotesData[id], id };
-        selectedId = id;
+        if (indexedQuotes[id]) {
+          return NextResponse.json(indexedQuotes[id]);
+        }
       }
     }
-  } else {
-    if (safeMode) {
-      quote = randomFromSet(safeQuotes);
-    }else{
-      quote = randomFromSet(quotesData);
-    }
   }
+
+  const pool = safeMode ? indexedSafeQuotes : indexedQuotes;
+
+  quote = randomFromSet(pool);
 
   return NextResponse.json(quote);
 }

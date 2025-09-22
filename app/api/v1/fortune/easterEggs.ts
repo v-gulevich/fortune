@@ -1,4 +1,4 @@
-import { Quote } from "./route";
+import { Quote } from "./Quote";
 
 export const easterEggs: Record<number, Quote> = {
   [-1]: {

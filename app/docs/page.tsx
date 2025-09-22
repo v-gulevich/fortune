@@ -1,21 +1,21 @@
 import Link from "next/link";
 import matter from "gray-matter";
-import rehypeStringify from 'rehype-stringify'
-import remarkGfm from 'remark-gfm'
-import remarkParse from 'remark-parse'
-import remarkRehype from 'remark-rehype'
-import {unified} from 'unified'
+import rehypeStringify from "rehype-stringify";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
 
 import docFile from "@/docs/api.md";
 
 export default async function Page() {
   const { content } = matter(docFile);
   const processed = await unified()
-  .use(remarkParse)
-  .use(remarkGfm)
-  .use(remarkRehype)
-  .use(rehypeStringify)
-  .process(content);  
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeStringify)
+    .process(content);
 
   return (
     <main className="min-h-screen flex flex-col p-4">
@@ -28,10 +28,11 @@ export default async function Page() {
         </div>
       </header>
 
-      
       <div className="flex justify-center mt-12">
-        <article className="w-2/3 prose" dangerouslySetInnerHTML={{ __html: processed.toString() }}>
-        </article>
+        <article
+          className="w-2/3 prose"
+          dangerouslySetInnerHTML={{ __html: processed.toString() }}
+        ></article>
       </div>
 
       <footer className="mt-auto pt-6 text-xs text-neutral-500 text-center">
