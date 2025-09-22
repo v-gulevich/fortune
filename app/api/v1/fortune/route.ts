@@ -2,7 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import quotesDataRaw from "./quotes.json";
 import { easterEggs } from "./easterEggs";
 
+// NSFW quotes are guaranteed to be at the end of the file, so none are accidentally lost
 const quotesData: Quote[] = quotesDataRaw as Quote[];
+const safeQuotes: Quote[] = quotesData.filter((q) => q.sfw);
 
 export interface Quote {
   text: string;
@@ -12,6 +14,11 @@ export interface Quote {
 
 export interface QuoteR extends Quote {
   id: number;
+}
+
+function randomFromSet(set: Quote[]): QuoteR {
+  const id: number = Math.floor(Math.random() * set.length);
+  return { ...set[id], id: id };
 }
 
 export async function GET(req: NextRequest) {
@@ -26,29 +33,25 @@ export async function GET(req: NextRequest) {
       : true;
   const idParam = url.searchParams.get("id");
 
-  let filteredQuotes = safeMode ? quotesData.filter((q) => q.sfw) : quotesData;
-
   let quote: QuoteR | undefined;
   let selectedId: number | undefined;
 
   if (idParam !== null) {
     const id = Number(idParam);
-    if (!isNaN(id) && id < 0 && easterEggs[id]) {
-      return NextResponse.json({ ...easterEggs[id], id });
+    if (!isNaN(id)) {
+      if (id < 0 && easterEggs[id]) {
+        return NextResponse.json({ ...easterEggs[id], id });
+      } else {
+        quote = { ...quotesData[id], id };
+        selectedId = id;
+      }
     }
-  }
-
-  if (idParam !== null) {
-    const id = Number(idParam);
-    if (!isNaN(id) && id >= 0) {
-      quote = { ...quotesData[id], id };
-      selectedId = id;
+  } else {
+    if (safeMode) {
+      quote = randomFromSet(safeQuotes);
+    }else{
+      quote = randomFromSet(quotesData);
     }
-  }
-
-  if (!quote) {
-    selectedId = Math.floor(Math.random() * filteredQuotes.length);
-    quote = { ...filteredQuotes[selectedId], id: selectedId };
   }
 
   return NextResponse.json(quote);
