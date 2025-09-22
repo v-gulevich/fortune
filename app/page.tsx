@@ -32,7 +32,7 @@ export default async function Page({
   const cookieSafeVal = cookieStore.get("safe")?.value;
   const safe = cookieSafeVal === "false" ? false : true; // default true
 
-  const apiUrl = new URL("/api/fortune", base);
+  const apiUrl = new URL("/api/v1/fortune", base);
   if (idParam && idParam !== "") {
     apiUrl.searchParams.set("id", idParam);
   }

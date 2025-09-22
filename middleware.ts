@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { Quote } from "./app/api/fortune/route";
+import { Quote } from "./app/api/v1/fortune/route";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
 
   if (isCLI && (pathname === "/" || pathname === "")) {
     try {
-      const apiUrl = new URL("/api/fortune", request.url);
+      const apiUrl = new URL("/api/v1/fortune", request.url);
 
       const resp = await fetch(apiUrl);
 

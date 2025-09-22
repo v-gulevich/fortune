@@ -1,6 +1,6 @@
 import { hash } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { Quote, QuoteR } from "../api/fortune/route";
+import { Quote, QuoteR } from "../api/v1/fortune/route";
 
 const kinds: Record<string, string> = {
   "X": "https://twitter.com/intent/tweet?text=",
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL(("/?id=21023"), url))
   }
 
-  const apiUrl = new URL(`/api/fortune?id=${idParam}`, base);
+  const apiUrl = new URL(`/api/v1/fortune?id=${idParam}`, base);
   const resp = await fetch(apiUrl);
 
   const data = await resp.json().catch(() => null);
