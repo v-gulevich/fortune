@@ -1,40 +1,21 @@
 import { createHash } from "crypto";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { IndexedQuote, Quote } from "./api/v1/fortune/Quote";
+import { IndexedQuote } from "@/lib/Quote";
 import Footer from "./components/footer";
 import { Metadata } from "next";
-import quotesDataRaw from "./api/v1/fortune/quotes.json"; 
-import { easterEggs } from "./api/v1/fortune/easterEggs";
+import { getFortune } from "@/lib/fortuneService";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
-const quotesData: Quote[] = quotesDataRaw as Quote[];
-const indexedQuotes: IndexedQuote[] = quotesData.map((q, i) => ({ ...q, id: i }));
-
-function getFortuneForMetadata(id?: number): IndexedQuote {
-  if (id !== undefined && Number.isInteger(id)) {
-    if (id < 0 && easterEggs[id]) {
-      return { ...easterEggs[id], id };
-    }
-    if (indexedQuotes[id]) {
-      return indexedQuotes[id];
-    }
-  }
-  // Return a default fortune if no valid ID is found for the preview
-  return indexedQuotes[0];
-}
-
 
 export async function generateMetadata({ searchParams }: { searchParams?: SearchParams }): Promise<Metadata> {
-  const idRaw = searchParams?.id;
+  const idRaw = (await searchParams)?.id;
   const idStr = Array.isArray(idRaw) ? idRaw[0] : idRaw;
   const id = idStr !== undefined ? Number(idStr) : undefined;
-  const fortune = getFortuneForMetadata(id);
+  const fortune = getFortune({id});
 
-  // Dynamically set the title and description for the social media card
   const title = `Fortune #${fortune.id}`;
-  // Clean up the text for the description (remove newlines, trim whitespace)
   const description = fortune.text.replace(/(\r\n|\n|\r|\t)/gm, " ").trim();
 
   return {
@@ -47,7 +28,6 @@ export async function generateMetadata({ searchParams }: { searchParams?: Search
       siteName: 'Fortune',
       type: 'website',
     },
-    // Twitter-specific tags for a better card on X
     twitter: {
       card: 'summary',
       title: title,
@@ -63,8 +43,8 @@ export default async function Page({
 }) {
   const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
- const sp = searchParams ?? {};
- const idParamRaw = sp.id;
+ const sp = await searchParams ?? {};
+ const idParamRaw = await sp.id;
  const idParam = Array.isArray(idParamRaw) ? idParamRaw[0] : idParamRaw;
 
   const cookieStore = await cookies();
@@ -85,11 +65,7 @@ export default async function Page({
     ? `safe=${encodeURIComponent(cookieSafeVal)}`
     : undefined;
 
-  const res = await fetch(apiUrl.toString(), {
-    cache: "no-store",
-    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
-  });
-  const quote: IndexedQuote = await res.json();
+  const quote: IndexedQuote = getFortune({id: Number(idParam), safe: Boolean(cookieHeader)});
 
   const redirectTarget = idParam ? `/?id=${idParam}` : `/`;
   const toggleHref = `/api/safe?value=${String(

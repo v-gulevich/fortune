@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { IndexedQuote } from "../api/v1/fortune/Quote";
+import { IndexedQuote } from "../../lib/Quote";
+import { getFortune } from "@/lib/fortuneService";
 
 const kinds: Record<string, string> = {
   X: "https://twitter.com/intent/tweet?text=",
@@ -20,13 +21,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL("/?id=21023", url));
   }
 
-  const apiUrl = new URL(`/api/v1/fortune?id=${idParam}`, base);
-  const resp = await fetch(apiUrl);
+  const fortune: IndexedQuote = getFortune({ id: Number(idParam) });
 
-  const data = await resp.json().catch(() => null);
-  const quote = data as IndexedQuote;
-
-  const shareText = `${quote.text}\n\n ${base}/?id=${quote.id}`;
+  const shareText = `${fortune.text}\n\n ${base}/?id=${fortune.id} #fortune #${fortune.category}`;
 
   const res = NextResponse.redirect(
     new URL(kinds[kindParam] + encodeURIComponent(shareText))

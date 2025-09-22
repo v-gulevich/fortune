@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { IndexedQuote } from "./app/api/v1/fortune/Quote";
+import { IndexedQuote } from "./lib/Quote";
+import { getFortune } from "./lib/fortuneService";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -9,35 +10,11 @@ export async function middleware(request: NextRequest) {
   const isCLI = /(?:^|[\s(])(curl|wget|httpie)(?:\/|\s|\)|$)/i.test(ua);
 
   if (isCLI && (pathname === "/" || pathname === "")) {
-    try {
-      const apiUrl = new URL("/api/v1/fortune", request.url);
+    const quote = String(getFortune({}).text) + "\n";
 
-      const resp = await fetch(apiUrl);
-
-      if (!resp.ok) {
-        const errText = await resp.text().catch(() => "");
-        return new NextResponse(
-          (errText || `Error: ${resp.status} ${resp.statusText}`) + "\n",
-          {
-            status: resp.status,
-            headers: { "Content-Type": "text/plain; charset=utf-8" },
-          }
-        );
-      }
-
-      const data = await resp.json().catch(() => null);
-      const quote = String((data as IndexedQuote).text) + "\n";
-
-      return new NextResponse(quote, {
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-      });
-    } catch (error) {
-      console.error("[middleware] CLI fortune fetch failed:", error);
-      return new NextResponse(`Internal error\n`, {
-        status: 502,
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
-      });
-    }
+    return new NextResponse(quote, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
   }
 
   const sessionToken = request.cookies.get("session_token")?.value;
