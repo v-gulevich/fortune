@@ -8,7 +8,6 @@ import { getFortune } from "@/lib/fortuneService";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
-
 export async function generateMetadata({ searchParams }: { searchParams?: SearchParams }): Promise<Metadata> {
   const idRaw = (await searchParams)?.id;
   const idStr = Array.isArray(idRaw) ? idRaw[0] : idRaw;
