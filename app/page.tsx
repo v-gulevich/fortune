@@ -114,6 +114,7 @@ export default async function Page({
               <Link
                 href={toggleHref}
                 title={`Switch to ${safe ? "All" : "Safe"} mode`}
+                prefetch={false}
               >
                 {safe ? "Safe" : "All"}
               </Link>
