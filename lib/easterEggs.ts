@@ -1,4 +1,4 @@
-import { Quote } from "../../../../lib/Quote";
+import { Quote } from "@/lib/Quote";
 
 export const easterEggs: Record<number, Quote> = {
   [-1]: {

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { IndexedQuote } from "./lib/Quote";
 import { getFortune } from "./lib/fortuneService";
 
 export async function middleware(request: NextRequest) {
