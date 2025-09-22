@@ -1,28 +1,77 @@
-import { hash } from "crypto";
+import { createHash } from "crypto";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { IndexedQuote } from "./api/v1/fortune/Quote";
+import { IndexedQuote, Quote } from "./api/v1/fortune/Quote";
 import Footer from "./components/footer";
+import { Metadata } from "next";
+import quotesDataRaw from "./api/v1/fortune/quotes.json"; 
+import { easterEggs } from "./api/v1/fortune/easterEggs";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
+
+const quotesData: Quote[] = quotesDataRaw as Quote[];
+const indexedQuotes: IndexedQuote[] = quotesData.map((q, i) => ({ ...q, id: i }));
+
+function getFortuneForMetadata(id?: number): IndexedQuote {
+  if (id !== undefined && Number.isInteger(id)) {
+    if (id < 0 && easterEggs[id]) {
+      return { ...easterEggs[id], id };
+    }
+    if (indexedQuotes[id]) {
+      return indexedQuotes[id];
+    }
+  }
+  // Return a default fortune if no valid ID is found for the preview
+  return indexedQuotes[0];
+}
+
+
+export async function generateMetadata({ searchParams }: { searchParams?: SearchParams }): Promise<Metadata> {
+  const idRaw = searchParams?.id;
+  const idStr = Array.isArray(idRaw) ? idRaw[0] : idRaw;
+  const id = idStr !== undefined ? Number(idStr) : undefined;
+  const fortune = getFortuneForMetadata(id);
+
+  // Dynamically set the title and description for the social media card
+  const title = `Fortune #${fortune.id}`;
+  // Clean up the text for the description (remove newlines, trim whitespace)
+  const description = fortune.text.replace(/(\r\n|\n|\r|\t)/gm, " ").trim();
+
+  return {
+    title: "Fortune", 
+    description: "Your daily dose of random quotes.",
+    openGraph: {
+      title: title,
+      description: description,
+      url: `https://fortune.gulevich.by/?id=${fortune.id}`,
+      siteName: 'Fortune',
+      type: 'website',
+    },
+    // Twitter-specific tags for a better card on X
+    twitter: {
+      card: 'summary',
+      title: title,
+      description: description,
+    },
+  };
+}
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>;
+  searchParams?: SearchParams;
 }) {
   const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-  const sp = await searchParams;
-  const idParamRaw = sp?.id;
-  const idParam = Array.isArray(idParamRaw) ? idParamRaw[0] : idParamRaw;
+ const sp = searchParams ?? {};
+ const idParamRaw = sp.id;
+ const idParam = Array.isArray(idParamRaw) ? idParamRaw[0] : idParamRaw;
 
   const cookieStore = await cookies();
 
-  const sth: string = hash(
-    "sha1",
-    cookieStore.get("session_token")?.value ?? ""
-  ).toString();
+  const sth: string = createHash("sha1")
+    .update(cookieStore.get("session_token")?.value ?? "")
+    .digest("hex");
 
   const cookieSafeVal = cookieStore.get("safe")?.value;
   const safe = cookieSafeVal === "false" ? false : true; // default true
